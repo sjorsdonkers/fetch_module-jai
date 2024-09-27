@@ -1,2 +1,2 @@
-# plutus
+# Plutus
 Accumulating and distributing wealth
