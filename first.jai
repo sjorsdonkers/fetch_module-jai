@@ -1,26 +1,23 @@
-#import "Compiler";
-#import "Basic";
-#import "Plutus";
+#run {
+    fetch(.{path = "./assets/Do_A_Thing.jai"});
 
-// User code
-#run build();
-build :: () {
-    path_pkg(.{path = "./assets/sum_type/Sum_Type.jai"});
-    gather(path_packages);
-
-    w := compiler_create_workspace("Target Program");
-    if !w {
+    space := compiler_create_workspace("Target Program");
+    if !space {
         print("Workspace creation failed.\n");
         return;
     }
 
-    target_options := get_build_options(w);
+    target_options := get_build_options(space);
     target_options.output_executable_name = "main";
-    set_build_options(target_options, w);
+    set_build_options(target_options, space);
 
-    compiler_begin_intercept(w);
-    add_build_file(tprint("%/main.jai", #filepath), w);  // @Cleanup: Fix this to not require #filepath.
-    compiler_end_intercept(w);
+    compiler_begin_intercept(space);
+    add_build_file(tprint("%/main.jai", #filepath), space);
+    compiler_end_intercept(space);
 
     set_build_options_dc(.{do_output=false});
 }
+
+#import "Compiler";
+#import "Basic";
+#import "Plutus";

@@ -1,4 +1,4 @@
 .build
-.exe
-.pbp
-modules/Sum_Type.jai
+*.exe
+*.pdb
+modules/Do_A_Thing.jai
