@@ -1,5 +1,5 @@
 #run {
-    fetch(.{path = "./assets/Do_A_Thing.jai"});
+    fetch(GitMod.{url = "git@github.com:sjorsdonkers/plutus.git", path = "./assets/Do_A_Thing.jai"});
 
     space := compiler_create_workspace("Target Program");
     if !space {
