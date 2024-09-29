@@ -1,32 +1,20 @@
 fetch :: (pkg: PathModule, update:= false, modules_dir:= default_modules_dir) {
-    // Check if the module already exists
-    target_dir := tprint("%/%", modules_dir, pkg.name);
-    target_filepath := tprint("%/%.jai", modules_dir, pkg.name);
-    if !update && (is_directory(target_dir) || file_exists(target_filepath)) {
-        log("Module `%` already exists", pkg.name);
+    if !update && is_module(pkg.name, modules_dir) {
+        log("Module % already exists", pkg.name);
         return;
     }
 
-    // Copy (override) the module
     make_directory_if_it_does_not_exist(modules_dir);
-    if is_directory(pkg.path) {
-        copy_directory(pkg.path, target_dir);
-    } else if file_exists(pkg.path) {
-        copy_file(pkg.path, target_filepath);
-    } else {
-        log_error("Module path `%` does not exist for module `%`", pkg.path, pkg.name);
-    }
+    copy_module(pkg.path, pkg.name, modules_dir);
 }
 
 fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
-    // Check if the module already exists
-    target_dir := tprint("%/%", modules_dir, pkg.name);
-    target_filepath := tprint("%/%.jai", modules_dir, pkg.name);
-    if !update && (is_directory(target_dir) || file_exists(target_filepath)) {
-        log("Module `%` already exists", pkg.name);
+    if !update && is_module(pkg.name, modules_dir) {
+        log("Module % already exists", pkg.name);
         return;
     }
 
+    log("Syncing module %'s git cache: %", pkg.name, pkg.url);
     // Get the name of the repository
     origin := parse_path(pkg.url);
     origin_gitname := origin.words[origin.words.count - 1];
@@ -46,20 +34,13 @@ fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
         result = run_command("git", "pull", working_directory = cache_path, capture_and_return_output = true, print_captured_output = true);
     }
     if result.exit_code != 0 {
-        log_error("Git command failed for module `%`: %", origin_stem, result);
+        log_error("Git command failed for module %: %", origin_stem, result);
         return;
     }
 
-    // Copy (override) from cache to the modules directory
     module_path := tprint("%/%", cache_path, pkg.path);
     make_directory_if_it_does_not_exist(modules_dir);
-    if is_directory(module_path) {
-        copy_directory(module_path, target_dir);
-    } else if file_exists(module_path) {
-        copy_file(module_path, target_filepath);
-    } else {
-        log_error("Module path `%` does not exist for module `%`", module_path, pkg.name);
-    }
+    copy_module(module_path, pkg.name, modules_dir);
 }
 
 PathModule :: struct {
@@ -74,6 +55,7 @@ GitModule :: struct {
 
 
 #scope_file
+
 #import "Basic";
 #import "File_Utilities";
 #import "File";
@@ -82,3 +64,28 @@ GitModule :: struct {
 #import "Process";
 
 default_modules_dir :: "./modules";
+
+is_module :: (name: string, modules_dir:= default_modules_dir) -> bool {
+    filemodule_filepath := tprint("%/%.jai", modules_dir, name);
+    if file_exists(filemodule_filepath) return true;
+
+    dirmodule_filepath := tprint("%/%/module.jai", modules_dir, name);
+    if file_exists(dirmodule_filepath) return true;
+
+    return false;
+}
+
+copy_module :: (source_path: string, target_module_name: string, modules_dir:= default_modules_dir) -> bool {
+    log("Copying module %", target_module_name);
+    if is_directory(source_path) {
+        target_dir := tprint("%/%", modules_dir, target_module_name);
+        copy_directory(source_path, target_dir);
+        return true;
+    } else if file_exists(source_path) {
+        target_filepath := tprint("%/%.jai", modules_dir, target_module_name);
+        return copy_file(source_path, target_filepath);
+    } else {
+        log_error("Cannot copy module. Source % does not exist, for module %", source_path, target_module_name);
+        return false;
+    }
+}
