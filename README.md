@@ -28,7 +28,7 @@ For GitModules `git` needs to be installed and available in the PATH.
    args := get_build_options().compile_time_command_line;
    do_update := array_find(args, "update");
    ```
-1. [optional] Enable Plutus updating itself by adding it as a dependency.
+1. [optional] Enable Plutus to update itself by adding it as a dependency.
    >NOTE: Does not work if Plutus is placed in the global modules dir.
    ```jai
    fetch(GitModule.{
