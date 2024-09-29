@@ -5,7 +5,7 @@ fetch :: (pkg: PathModule, update:= false, modules_dir:= default_modules_dir) {
     }
 
     make_directory_if_it_does_not_exist(modules_dir);
-    if !copy_module(pkg.path, pkg.name, modules_dir) exit(1);
+    copy_module(pkg.path, pkg.name, modules_dir);
 }
 
 fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
@@ -18,23 +18,20 @@ fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
     module_path := tprint("%/%", cache_path, pkg.path);
 
     make_directory_if_it_does_not_exist(modules_dir);
-    if !copy_module(module_path, pkg.name, modules_dir) exit(1);
+    copy_module(module_path, pkg.name, modules_dir);
 }
 
 PathModule :: struct {
-    name : string;
+    name : string; // User-defined local name of the dependency to import
     path : string; // Points to dir with module.jai, or .jai file
 }
 GitModule :: struct {
-    name : string;
-    url : string;
-    path : string; // Points to dir with module.jai, or .jai file from the root of the repo
+    name : string; // User-defined local name of the dependency to import
+    url : string;  // URL of the git repository (git@github.com:my_org/my_repo.git)
+    path : string; // Points to dir with module.jai, or .jai file from the root of the repository
 }
 
-
 #scope_file
-
-
 
 is_module :: (name: string, modules_dir: string) -> bool {
     filemodule_filepath := tprint("%/%.jai", modules_dir, name);
@@ -42,23 +39,21 @@ is_module :: (name: string, modules_dir: string) -> bool {
 
     dirmodule_filepath := tprint("%/%/module.jai", modules_dir, name);
     if file_exists(dirmodule_filepath) return true;
-
     return false;
 }
 
-copy_module :: (source_path: string, target_module_name: string, modules_dir: string) -> bool {
+copy_module :: (source_path: string, target_module_name: string, modules_dir: string) {
     log("Copying module %", target_module_name);
     if is_directory(source_path) {
         target_dir := tprint("%/%", modules_dir, target_module_name);
         if is_directory(target_dir) delete_directory(target_dir);
         copy_directory(source_path, target_dir);
-        return true;
     } else if file_exists(source_path) {
         target_filepath := tprint("%/%.jai", modules_dir, target_module_name);
-        return copy_file(source_path, target_filepath);
+        if  !copy_file(source_path, target_filepath) exit(1);
     } else {
         log_error("Cannot copy module. Source % does not exist, for module %", source_path, target_module_name);
-        return false;
+        exit(1);
     }
 }
 
@@ -68,6 +63,10 @@ sync_gitcache :: (git_url: string) -> string {
     origin := parse_path(git_url);
     origin_gitname := origin.words[origin.words.count - 1];
     found, origin_stem := split_from_right(origin_gitname, ".git");
+    if !found {
+        log_error("git url % does not end in .git", git_url);
+        exit(1);
+    }
     // Compose the cache paths
     gitcache_dir := tprint("%/%", get_home_directory(), ".plutus/gitcache");
     cache_path := tprint("%/%", gitcache_dir, origin_stem);
