@@ -3,3 +3,4 @@
 *.pdb
 examples/one/modules/Do_A_Thing.jai
 examples/one/modules/Plutus.jai
+examples/one/main
