@@ -5,7 +5,7 @@ fetch :: (pkg: PathModule, update:= false, modules_dir:= default_modules_dir) {
     }
 
     make_directory_if_it_does_not_exist(modules_dir);
-    copy_module(pkg.path, pkg.name, modules_dir);
+    if !copy_module(pkg.path, pkg.name, modules_dir) exit(1);
 }
 
 fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
@@ -18,7 +18,7 @@ fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
     module_path := tprint("%/%", cache_path, pkg.path);
 
     make_directory_if_it_does_not_exist(modules_dir);
-    copy_module(module_path, pkg.name, modules_dir);
+    if !copy_module(module_path, pkg.name, modules_dir) exit(1);
 }
 
 PathModule :: struct {
@@ -34,14 +34,7 @@ GitModule :: struct {
 
 #scope_file
 
-#import "Basic";
-#import "File_Utilities";
-#import "File";
-#import "System";
-#import "String";
-#import "Process";
 
-default_modules_dir :: "./modules";
 
 is_module :: (name: string, modules_dir: string) -> bool {
     filemodule_filepath := tprint("%/%.jai", modules_dir, name);
@@ -57,6 +50,7 @@ copy_module :: (source_path: string, target_module_name: string, modules_dir: st
     log("Copying module %", target_module_name);
     if is_directory(source_path) {
         target_dir := tprint("%/%", modules_dir, target_module_name);
+        if is_directory(target_dir) delete_directory(target_dir);
         copy_directory(source_path, target_dir);
         return true;
     } else if file_exists(source_path) {
@@ -94,3 +88,12 @@ sync_gitcache :: (git_url: string) -> string {
     }
     return cache_path;
 }
+
+default_modules_dir :: "./modules";
+
+#import "Basic";
+#import "File_Utilities";
+#import "File";
+#import "System";
+#import "String";
+#import "Process";

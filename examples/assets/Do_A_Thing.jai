@@ -1,4 +1,4 @@
 
 thinging :: () -> string {
-    return "I did a thing!";
+    return "I did a thing!\n";
 }

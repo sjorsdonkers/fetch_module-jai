@@ -3,7 +3,8 @@
     #import "Plutus";
     args := get_build_options().compile_time_command_line;
     do_update := array_find(args, "update");
-    fetch(GitModule.{name = "Do_A_Thing", url = "git@github.com:sjorsdonkers/plutus.git", path = "./examples/assets/Do_A_Thing.jai"}, do_update);
+    fetch(GitModule.{name = "Do_A_Thing", url = "git@github.com:sjorsdonkers/plutus.git", path = "examples/assets/Do_A_Thing.jai"}, do_update);
+    fetch(GitModule.{name = "Do_Other_Thing", url = "git@github.com:sjorsdonkers/plutus.git", path = "examples/assets/Do_Other_Thing"}, do_update);
     /// ---/Plutus ---
 
     space := compiler_create_workspace("Target Program");
