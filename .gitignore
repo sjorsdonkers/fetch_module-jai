@@ -2,3 +2,4 @@
 *.exe
 *.pdb
 examples/one/modules/Do_A_Thing.jai
+examples/one/modules/Plutus.jai
