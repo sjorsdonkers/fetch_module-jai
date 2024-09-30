@@ -14,7 +14,7 @@ fetch :: (pkg: GitModule, update:= false) {
         return;
     }
 
-    cache_path := sync_gitcache(pkg.url);
+    cache_path := sync_gitcache(pkg.url, pkg.branch, pkg.commit);
     module_path := tprint("%/%", cache_path, pkg.path);
 
     make_directory_if_it_does_not_exist(default_modules_dir);
@@ -28,6 +28,8 @@ PathModule :: struct {
 GitModule :: struct {
     name : string; // User-defined local name of the dependency to import
     url : string;  // URL of the git repository (git@github.com:my_org/my_repo.git)
+    branch : string = "main"; // Branch to checkout
+    commit : string = ""; // Commit to checkout
     path : string; // Points to dir with module.jai, or .jai file from the root of the repository
 }
 
@@ -57,7 +59,7 @@ copy_module :: (source_path: string, target_module_name: string, modules_dir: st
     }
 }
 
-sync_gitcache :: (git_url: string) -> string {
+sync_gitcache :: (git_url: string, branch: string, commit: string) -> string {
     log("Syncing gitcache: %", git_url);
     // Get the name of the repository
     origin := parse_path(git_url);
@@ -71,20 +73,33 @@ sync_gitcache :: (git_url: string) -> string {
     gitcache_dir := tprint("%/%", get_home_directory(), ".plutus/gitcache");
     cache_path := tprint("%/%", gitcache_dir, origin_stem);
 
+    // Convenience procedure for running git commands
+    run :: (args : ..string, working_directory: string) {
+        result := run_command(..args, working_directory = working_directory, capture_and_return_output = true, print_captured_output = true);
+        if result.exit_code != 0 {
+            log_error("Git command failed for syncing module: %", result);
+            exit(1);
+        }
+    }
+
     // Create / update the cache
-    result: Process_Result;
-    if !is_directory(cache_path) {
+    is_new := !is_directory(cache_path);
+    if is_new {
         // The repository has not been cached yet
         make_directory_if_it_does_not_exist(gitcache_dir, true);
-        result = run_command("git", "clone", git_url, working_directory = gitcache_dir, capture_and_return_output = true, print_captured_output = true);
+        run("git", "clone", git_url, working_directory = gitcache_dir);
     } else {
         // Pull in changes to see if there are any updates
-        result = run_command("git", "pull", working_directory = cache_path, capture_and_return_output = true, print_captured_output = true);
+        run("git", "fetch", working_directory = cache_path);
     }
-    if result.exit_code != 0 {
-        log_error("Git command failed for module %: %", origin_stem, result);
-        exit(1);
+    if commit == "" {
+        run("git", "checkout", branch, working_directory = cache_path);
+        if !is_new run("git", "pull", working_directory = cache_path);
+    } else {
+        run("git", "checkout", "--quiet", commit, working_directory = cache_path);
+        log("Switched to commit '%'", commit);
     }
+
     return cache_path;
 }
 
