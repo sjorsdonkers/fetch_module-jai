@@ -1,24 +1,30 @@
-fetch :: (pkg: PathModule, update:= false) {
-    if !update && is_module(pkg.name, default_modules_dir) {
-        log("Module % already exists", pkg.name);
+// Places a Jai module at a Path in the project's module directory
+// - mod: Definition of the modules source
+// - update: Wheter to overwrite the module if it already exists
+fetch :: (mod: PathModule, update:= false) {
+    if !update && is_module(mod.name, default_modules_dir) {
+        log("Module % already exists", mod.name);
         return;
     }
 
     make_directory_if_it_does_not_exist(default_modules_dir);
-    copy_module(pkg.path, pkg.name, default_modules_dir);
+    copy_module(mod.path, mod.name, default_modules_dir);
 }
 
-fetch :: (pkg: GitModule, update:= false) {
-    if !update && is_module(pkg.name, default_modules_dir) {
-        log("Module % already exists", pkg.name);
+// Places a Jai module on Git in the project's module directory
+// - mod: Definition of the modules source
+// - update: Wheter to overwrite the module if it already exists
+fetch :: (mod: GitModule, update:= false) {
+    if !update && is_module(mod.name, default_modules_dir) {
+        log("Module % already exists", mod.name);
         return;
     }
 
-    cache_path := sync_gitcache(pkg.url, pkg.branch, pkg.commit);
-    module_path := tprint("%/%", cache_path, pkg.path);
+    cache_path := sync_gitcache(mod.url, mod.branch, mod.commit);
+    module_path := tprint("%/%", cache_path, mod.path);
 
     make_directory_if_it_does_not_exist(default_modules_dir);
-    copy_module(module_path, pkg.name, default_modules_dir);
+    copy_module(module_path, mod.name, default_modules_dir);
 }
 
 PathModule :: struct {

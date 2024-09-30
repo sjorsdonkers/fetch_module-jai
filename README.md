@@ -14,12 +14,10 @@ For GitModules `git` needs to be installed and available in the PATH.
    ```jai
    #run {
        #import "Plutus";
-       do_update:= false;
        fetch(GitModule.{
-               name = "Do_A_Thing",
-               url = "git@github.com:sjorsdonkers/plutus.git",
-               path = "./examples/assets/Do_A_Thing.jai"},
-           do_update);
+            name = "Do_A_Thing",
+            url = "git@github.com:sjorsdonkers/plutus.git",
+            path = "./examples/assets/Do_A_Thing.jai"});
        ...
    }
    ```
@@ -27,6 +25,7 @@ For GitModules `git` needs to be installed and available in the PATH.
    ```jai
    args := get_build_options().compile_time_command_line;
    do_update := array_find(args, "update");
+   fetch(PathModule.{...}, do_update);
    ```
 1. [optional] Enable Plutus to update itself by adding it as a dependency.
    >NOTE: Does not work if Plutus is placed in the global modules dir.
