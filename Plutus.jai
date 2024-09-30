@@ -1,15 +1,15 @@
-fetch :: (pkg: PathModule, update:= false, modules_dir:= default_modules_dir) {
-    if !update && is_module(pkg.name, modules_dir) {
+fetch :: (pkg: PathModule, update:= false) {
+    if !update && is_module(pkg.name, default_modules_dir) {
         log("Module % already exists", pkg.name);
         return;
     }
 
-    make_directory_if_it_does_not_exist(modules_dir);
-    copy_module(pkg.path, pkg.name, modules_dir);
+    make_directory_if_it_does_not_exist(default_modules_dir);
+    copy_module(pkg.path, pkg.name, default_modules_dir);
 }
 
-fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
-    if !update && is_module(pkg.name, modules_dir) {
+fetch :: (pkg: GitModule, update:= false) {
+    if !update && is_module(pkg.name, default_modules_dir) {
         log("Module % already exists", pkg.name);
         return;
     }
@@ -17,8 +17,8 @@ fetch :: (pkg: GitModule, update:= false, modules_dir:= default_modules_dir) {
     cache_path := sync_gitcache(pkg.url);
     module_path := tprint("%/%", cache_path, pkg.path);
 
-    make_directory_if_it_does_not_exist(modules_dir);
-    copy_module(module_path, pkg.name, modules_dir);
+    make_directory_if_it_does_not_exist(default_modules_dir);
+    copy_module(module_path, pkg.name, default_modules_dir);
 }
 
 PathModule :: struct {
