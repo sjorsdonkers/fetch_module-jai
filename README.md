@@ -14,7 +14,7 @@ For GitModules `git` needs to be installed and available in the PATH.
    ```jai
    #run {
        #import "Plutus";
-       do_update:= true;
+       do_update:= false;
        fetch(GitModule.{
                name = "Do_A_Thing",
                url = "git@github.com:sjorsdonkers/plutus.git",
