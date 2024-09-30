@@ -1,8 +1,9 @@
 # Plutus
 A compile-time **Jai Module Manager** for accumulating and distributing a wealth of Jai modules.
 
-Plutus is a Jai module that aims to make it more convenient to define external dependency versions and keep up-to-date in the project.
-Plutus contains normal Jai procedures meant to be called from a build workspace before the main library or application.
+Plutus is a Jai module itself that aims to make it more convenient to define external dependency versions and keep them up-to-date.
+Plutus contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
+Currently it supports Git and Path based dependencies.
 
 ## Requirements
 For GitModules `git` needs to be installed and available in the PATH.
