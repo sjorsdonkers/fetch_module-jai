@@ -92,12 +92,14 @@ sync_gitcache :: (git_url: string, branch: string, commit: string) -> string {
         // Pull in changes to see if there are any updates
         run("git", "fetch", working_directory = cache_path);
     }
-    if commit == "" {
-        run("git", "checkout", branch, working_directory = cache_path);
-        if !is_new run("git", "pull", working_directory = cache_path);
-    } else {
+    if commit != "" {
+        // Checkout the commit as a detachedHEAD (this ignores the branch)
         run("git", "checkout", "--quiet", commit, working_directory = cache_path);
         log("Switched to commit '%'", commit);
+    } else {
+        // Checkout/update the branch
+        run("git", "checkout", branch, working_directory = cache_path);
+        if !is_new run("git", "pull", working_directory = cache_path);
     }
 
     return cache_path;
