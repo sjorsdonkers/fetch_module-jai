@@ -1,5 +1,5 @@
 # Plutus
-A **Jai Module Manager** for accumulating and distributing a wealth of Jai modules.
+A compile-time **Jai Module Manager** for accumulating and distributing a wealth of Jai modules.
 
 Plutus is a Jai module that aims to make it more convenient to define external dependency versions and keep up-to-date in the project.
 Plutus contains normal Jai procedures meant to be called from a build workspace before the main library or application.
