@@ -2,4 +2,5 @@
 *.exe
 *.pdb
 examples/one/modules/*
+examples/one/licenses/*
 examples/one/main
