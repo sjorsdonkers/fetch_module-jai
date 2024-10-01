@@ -144,7 +144,7 @@ sync_gitcache :: (git_url: string, branch: string, commit: string) -> string {
         exit(1);
     }
     // Compose the cache paths
-    gitcache_dir := tprint("%/%", get_home_directory(), ".plutus/gitcache");
+    gitcache_dir := tprint("%/%", get_home_directory(), ".modocil/gitcache");
     cache_path := tprint("%/%", gitcache_dir, origin_stem);
 
     // Convenience procedure for running git commands

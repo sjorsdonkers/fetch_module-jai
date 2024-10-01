@@ -1,11 +1,11 @@
 #run {
-    // --- Plutus ---
-    #import "Plutus";
+    // --- Modocil ---
+    #import "Modocil";
     args := get_build_options().compile_time_command_line;
     do_update := array_find(args, "update");
-    fetch(GitModule.{name = "Do_A_Thing", url = "git@github.com:sjorsdonkers/plutus.git", path = "examples/assets/Do_A_Thing.jai"}, do_update);
-    fetch(GitModule.{name = "Do_Other_Thing", url = "git@github.com:sjorsdonkers/plutus.git", commit = "21a0e57", path = "examples/assets/Do_Other_Thing"}, do_update);
-    /// ---/Plutus ---
+    fetch(GitModule.{name = "Do_A_Thing", url = "git@github.com:sjorsdonkers/modocil.git", path = "examples/assets/Do_A_Thing.jai"}, do_update);
+    fetch(GitModule.{name = "Do_Other_Thing", url = "git@github.com:sjorsdonkers/modocil.git", commit = "21a0e57", path = "examples/assets/Do_Other_Thing"}, do_update);
+    /// ---/Modocil ---
 
     space := compiler_create_workspace("Target Program");
     if !space {

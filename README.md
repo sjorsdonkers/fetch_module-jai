@@ -1,23 +1,31 @@
-# Plutus
-A compile-time **Jai Module Manager** for accumulating and distributing a wealth of Jai modules.
+# Modocil
+A compile-time **Jai Module Organizer**.
 
-Plutus is a Jai module itself that aims to make it more convenient to define external dependency versions and keep them up-to-date.
-Plutus contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
+The goals are to have:
+- A standardized way to document external dependency/versions. [TODO]
+-  A standardized way to store licenses.
+- Checked consistency between specified modules/versions, the module code, and their licenses.
+
+
+
+
+Modocil is a Jai module itself that aims to make it more convenient to define external dependency versions and keep them up-to-date.
+Modocil contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
 Currently it supports Git and Path based dependencies.
 
 ## Requirements
 For GitModules `git` needs to be installed and available in the PATH.
 
 ## Usage
-1. Place `Plutus.jai` inside the modules directory.
+1. Place `Modocil.jai` inside the modules directory.
 1. Add a fetch statement to the **build workspace** for each dependency module.
    >NOTE: If you do not already have a build workspace you'll need to create one, see [example: one](./examples/one/first.jai).
    ```jai
    #run {
-       #import "Plutus";
+       #import "Modocil";
        fetch(GitModule.{
             name = "Do_A_Thing",
-            url = "git@github.com:sjorsdonkers/plutus.git",
+            url = "git@github.com:sjorsdonkers/modocil.git",
             path = "./examples/assets/Do_A_Thing.jai"});
        ...
    }
@@ -28,15 +36,15 @@ For GitModules `git` needs to be installed and available in the PATH.
    do_update := array_find(args, "update");
    fetch(PathModule.{...}, do_update);
    ```
-1. [optional] Enable Plutus to update itself by adding it as a dependency.
-   >NOTE: Does not work if Plutus is placed in the global modules dir.
+1. [optional] Enable Modocil to update itself by adding it as a dependency.
+   >NOTE: Does not work if Modocil is placed in the global modules dir.
    ```jai
    fetch(GitModule.{
-            name = "Plutus",
-            url = "git@github.com:sjorsdonkers/plutus.git",
-            path = "Plutus.jai"}, 
+            name = "Modocil",
+            url = "git@github.com:sjorsdonkers/modocil.git",
+            path = "Modocil.jai"}, 
         do_update);
    ```
 
 ### Limitations:
-- Plutus cannot fetch dependency modules for the workspace it itself is in.
+- Modocil cannot fetch dependency modules for the workspace it itself is in.
