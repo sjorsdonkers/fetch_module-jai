@@ -2,12 +2,14 @@
 A compile-time **Jai Module Organizer**.
 
 The goals are to have:
-- A standardized way to document external dependency/versions. [TODO]
--  A standardized way to store licenses.
+- A standardized way to document external dependency/versions. [WIP]
+- A standardized way to store licenses.
 - Checked consistency between specified modules/versions, the module code, and their licenses.
 
-
-
+What Modocil does:
+- Download and cache modules  
+(if they are not already in the modules directory of the project).
+- Place licenses in the licenses directory.
 
 Modocil is a Jai module itself that aims to make it more convenient to define external dependency versions and keep them up-to-date.
 Modocil contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
@@ -37,7 +39,7 @@ For GitModules `git` needs to be installed and available in the PATH.
    fetch(PathModule.{...}, do_update);
    ```
 1. [optional] Enable Modocil to update itself by adding it as a dependency.
-   >NOTE: Does not work if Modocil is placed in the global modules dir.
+   >NOTE: Does not work if Modocil is placed in the global modules directory.
    ```jai
    fetch(GitModule.{
             name = "Modocil",
@@ -48,3 +50,4 @@ For GitModules `git` needs to be installed and available in the PATH.
 
 ### Limitations:
 - Modocil cannot fetch dependency modules for the workspace it itself is in.
+- Defining the dependencies in code prevents other tooling from processing the data.
