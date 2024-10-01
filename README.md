@@ -8,7 +8,8 @@ The goals are:
 - Prevent long and wide dependency chains.
 
 What Modocil does:
-- Download and cache modules  
+- Nothing if the dependencies are already there.
+- Download and cache modules.  
 (if they are not already in the modules directory of the project).
 - Place licenses in the licenses directory.
 
