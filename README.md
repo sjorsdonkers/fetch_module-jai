@@ -5,7 +5,7 @@ The goals are:
 - A standardized way to document external dependency/versions. [WIP]
 - A standardized way to store licenses.
 - Checked consistency between specified modules/versions, the module code, and their licenses.
-- Prevent long and wide dependency chaines
+- Prevent long and wide dependency chains.
 
 What Modocil does:
 - Download and cache modules  
