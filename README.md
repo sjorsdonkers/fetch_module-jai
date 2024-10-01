@@ -9,13 +9,10 @@ The goals are:
 
 What Modocil does:
 - Nothing if the dependencies are already there.
-- Download and cache modules.  
-(if they are not already in the modules directory of the project).
+- Download and cache git/path modules.
 - Place licenses in the licenses directory.
 
-Modocil is a Jai module itself that aims to make it more convenient to define external dependency versions and keep them up-to-date.
-Modocil contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
-Currently it supports Git and Path based dependencies.
+Modocil is a Jai module itself. It contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
 
 ## Requirements
 For GitModules `git` needs to be installed and available in the PATH.
@@ -34,7 +31,7 @@ For GitModules `git` needs to be installed and available in the PATH.
        ...
    }
    ```
-1. [recommended] Only update modules when the `- update` given. Like: `jai .\first.jai - update`
+1. [recommended] Update modules when the `- update` given. Like: `jai .\first.jai - update`
    ```jai
    args := get_build_options().compile_time_command_line;
    do_update := array_find(args, "update");
