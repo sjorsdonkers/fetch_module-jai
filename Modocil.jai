@@ -104,7 +104,7 @@ find_licenses :: (module_path: string, max_search_depth: int) -> found:bool, lic
 
     // Loop into parent dirs to find a license file
     dir_path := parse_path(dir);
-    for < dir_path.words.count..max(1, dir_path.words.count - max_search_depth) {
+    for #v2 < max(1, dir_path.words.count - max_search_depth)..dir_path.words.count {
         current_dir := path_to_string(dir_path, it);
         found, license_filepaths := contains_license_files(current_dir);
         if found {
