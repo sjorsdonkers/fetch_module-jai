@@ -1,4 +1,4 @@
-# Modocil
+# Fetch_Module
 A compile-time **Jai Module Organizer**.
 
 The goals are:
@@ -7,26 +7,26 @@ The goals are:
 - Checked consistency between specified modules/versions, the module code, and their licenses.
 - Prevent long and wide dependency chains.
 
-What Modocil does:
+What Fetch_Module does:
 - Nothing if the dependencies are already there.
 - Download and cache git/path modules.
 - Place licenses in the licenses directory.
 
-Modocil is a Jai module itself. It contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
+Fetch_Module is a Jai module itself. It contains normal Jai procedures and is meant to be called from a build workspace prior to the main library or application that uses the external modules.
 
 ## Requirements
 For GitModules `git` needs to be installed and available in the PATH.
 
 ## Usage
-1. Place `Modocil.jai` inside the modules directory.
+1. Place `Fetch_Module.jai` inside the modules directory.
 1. Add a fetch statement to the **build workspace** for each dependency module.
    >NOTE: If you do not already have a build workspace you'll need to create one, see [example: one](./examples/one/first.jai).
    ```jai
    #run {
-       #import "Modocil";
+       #import "Fetch_Module";
        fetch(GitModule.{
             name = "Do_A_Thing",
-            url = "git@github.com:sjorsdonkers/modocil.git",
+            url = "git@github.com:sjorsdonkers/fetch_module-jai",
             path = "./examples/assets/Do_A_Thing.jai"});
        ...
    }
@@ -37,16 +37,16 @@ For GitModules `git` needs to be installed and available in the PATH.
    do_update := array_find(args, "update");
    fetch(PathModule.{...}, do_update);
    ```
-1. [optional] Enable Modocil to update itself by adding it as a dependency.
-   >NOTE: Does not work if Modocil is placed in the global modules directory.
+1. [optional] Enable Fetch_Module to update itself by adding it as a dependency.
+   >NOTE: Does not work if Fetch_Module is placed in the global modules directory.
    ```jai
    fetch(GitModule.{
-            name = "Modocil",
-            url = "git@github.com:sjorsdonkers/modocil.git",
-            path = "Modocil.jai"}, 
+            name = "Fetch_Module",
+            url = "git@github.com:sjorsdonkers/fetch_module-jai",
+            path = "Fetch_Module.jai"}, 
         do_update);
    ```
 
 ### Limitations:
-- Modocil cannot fetch dependency modules for the workspace it itself is in.
+- Fetch_Module cannot fetch dependency modules for the workspace it itself is in.
 - Defining the dependencies in code prevents other tooling from processing the data.

@@ -1,10 +1,10 @@
 #run {
-    // --- Modocil ---
-    #import "Modocil";
+    // --- Fetch_Module ---
+    #import "Fetch_Module";
     do_update := array_find(get_build_options().compile_time_command_line, "update");
-    fetch(GitModule.{name = "Do_A_Thing", url = "git@github.com:sjorsdonkers/modocil.git", commit = "21a0e57", path = "examples/assets/Do_A_Thing.jai"}, do_update);
-    fetch(GitModule.{name = "Do_Other_Thing", url = "git@github.com:sjorsdonkers/modocil.git", path = "examples/assets/Do_Other_Thing"}, do_update);
-    /// ---/Modocil ---
+    fetch(GitModule.{name = "Do_A_Thing", url = "git@github.com:sjorsdonkers/fetch_module-jai.git", commit = "21a0e57", path = "examples/assets/Do_A_Thing.jai"}, do_update);
+    fetch(GitModule.{name = "Do_Other_Thing", url = "git@github.com:sjorsdonkers/fetch_module-jai.git", path = "examples/assets/Do_Other_Thing"}, do_update);
+    /// ---/Fetch_Module ---
 
     space := compiler_create_workspace("Target Program");
     if !space {
